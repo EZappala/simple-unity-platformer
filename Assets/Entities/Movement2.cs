@@ -3,64 +3,94 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Entities {
-/// <inheritdoc />
-/// <summary>
-/// Recreation of Madeline's movement from Celeste.
-/// Old implementation in Movement.cs
-/// </summary>
 public sealed class Movement2 : MonoBehaviour {
+    private static readonly int ON_RUN = Animator.StringToHash("OnRun");
+    private static readonly int ON_IDLE = Animator.StringToHash("OnIdle");
+    private static readonly int ON_JUMP = Animator.StringToHash("OnJump");
     private Rigidbody2D rb;
     private CapsuleCollider2D collider_2d;
     private SpriteRenderer sprite_renderer;
     private InputAction move;
     private InputAction jump;
+    private Animator anim;
 
     [SerializeField] private InputActionAsset player_ctrl;
 
     [SerializeField] private InputState input;
     [SerializeField] private float jumping_force = 150f;
 
-    [SerializeField] private float collision_tolerance = 0.005f;
-    [SerializeField] private float nudge_amount = 0.1f;
+    [Header("Gravity")] [SerializeField] private float gravity_normal;
+    [SerializeField] private float gravity_fall;
+    [SerializeField] private float gravity_jump_cut;
+    [SerializeField] private float max_fall_speed;
 
-    [SerializeField] private float max_speed = 10f;
-    [SerializeField] private float move_speed = 200f;
-    [SerializeField] private float horizontal_deceleration = 20f;
+    [Header("Timings")] [SerializeField] private float coyote_time;
 
-    // Gravity tuning, see explanation below
-    [SerializeField] private float gravity_normal = 1f;
-    [SerializeField] private float gravity_fall = 3.5f;
-    [SerializeField] private float gravity_jump_cut = 5f;
-    [SerializeField] private float max_fall_speed = -25f;
+    [Header("Movement")] [SerializeField] private float max_speed;
 
-    // See explanation below
-    [SerializeField] private float coyote_time = 0.08f;
+    [SerializeField] private float collision_tolerance;
+    [SerializeField] private float nudge_amount;
+    [SerializeField] private float ground_acceleration;
+    [SerializeField] private float air_acceleration;
+    [SerializeField] private float air_control_multiplier;
+    [SerializeField] private float air_max_speed_multiplier;
+    [SerializeField] private float ground_friction;
 
-    // Horizontal acceleration control
-    /// <summary>
-    /// Ground Acceleration in units per second^2 (for the MoveTowards function below)
-    /// </summary>
-    [SerializeField] private float ground_acceleration = 120f;
+    [Header("Presets")] [SerializeField] private MovementPreset preset = MovementPreset.Snappy;
+    [SerializeField] [HideInInspector] private MovementPreset applied_preset = (MovementPreset)(-1);
 
-    [SerializeField] private float air_acceleration = 40f;
+    private void apply_preset(MovementPreset p) {
+        switch (p) {
+            case MovementPreset.Snappy:
+                max_speed = 10f;
+                max_fall_speed = -40f;
+                ground_acceleration = 300f;
+                air_acceleration = 300f;
+                air_control_multiplier = 0.55f;
+                air_max_speed_multiplier = 1f;
+                ground_friction = 50f;
+                gravity_fall = 12f;
+                gravity_jump_cut = 20f;
+                jumping_force = 15;
+                gravity_normal = 6f;
+                coyote_time = 0.12f;
+                break;
+            case MovementPreset.Relaxed:
+                max_speed = 10f;
+                ground_acceleration = 160f;
+                air_acceleration = 60f;
+                air_control_multiplier = 0.75f;
+                air_max_speed_multiplier = 0.8f;
+                ground_friction = 30f;
+                gravity_fall = 4f;
+                gravity_jump_cut = 6f;
+                jumping_force = 8;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(p), p, null);
+        }
+    }
 
-    /// <summary>
-    /// Reduces the strength of horizontal input while in air to prevent excessive air control.
-    /// </summary>
-    [SerializeField] private float air_control_multiplier = 0.75f;
+    private void OnValidate() {
+        if (applied_preset == preset) return;
 
-    /// <summary>
-    /// We don't allow the player to float around and fly by capping max horizontal speed in air.
-    /// </summary>
-    [SerializeField] private float air_max_speed_multiplier = 0.9f;
+        apply_preset(preset);
+        applied_preset = preset;
+    }
 
-    // Keep track of the last time we were grounded for coyote time
+    [ContextMenu("Apply Current Preset")]
+    private void apply_current_preset_context_menu() {
+        apply_preset(preset);
+        applied_preset = preset;
+    }
+
     private float last_grounded_time = -100f;
 
     private void Awake() {
         Debug.Assert(TryGetComponent(out rb), "Rigidbody2D component missing!");
         Debug.Assert(TryGetComponent(out collider_2d), "CapsuleCollider2D component missing!");
         Debug.Assert(TryGetComponent(out sprite_renderer), "SpriteRenderer component missing!");
+        Debug.Assert(TryGetComponent(out anim), "Animator component missing!");
         Debug.Assert(player_ctrl != null, "Player Input Action Asset not set!");
 
         var ia = player_ctrl!.FindActionMap("Player", true);
@@ -105,14 +135,15 @@ public sealed class Movement2 : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        // Update grounded state
-        var cast = Physics2D.CapsuleCast(collider_2d!.bounds.center, collider_2d.bounds.size, CapsuleDirection2D.Vertical, 0f, Vector2.down, collider_2d.bounds.extents.y + collision_tolerance, LayerMask.GetMask("Ground"));
-        var was_grounded = input.grounded;
+        var bounds = collider_2d!.bounds;
+        var cast = Physics2D.CapsuleCast(collider_2d!.bounds.center, bounds.size,
+            CapsuleDirection2D.Vertical, 0f, Vector2.down, bounds.extents.y + collision_tolerance,
+            LayerMask.GetMask("Ground"));
+
         input.grounded = cast.collider != null;
         switch (input.grounded) {
             case true: {
                 last_grounded_time = Time.time;
-                // reset jump-cancel flag and gravity when landing
                 if (input.JumpCanceled) {
                     input.JumpCanceled = false;
                     rb!.gravityScale = gravity_normal;
@@ -120,9 +151,9 @@ public sealed class Movement2 : MonoBehaviour {
 
                 break;
             }
-            // Head nudge when hitting overhead slightly
-            case false when Mathf.Abs(rb!.linearVelocity.y) > 0.001f: {
-                var hit = Physics2D.Raycast(collider_2d!.bounds.center, Vector2.up, collider_2d.bounds.extents.y + collision_tolerance, LayerMask.GetMask("Ground"));
+            case false when Mathf.Abs(rb!.linearVelocityY) > 0.001f: {
+                var hit = Physics2D.Raycast(collider_2d!.bounds.center, Vector2.up,
+                    collider_2d.bounds.extents.y + collision_tolerance, LayerMask.GetMask("Ground"));
                 if (hit.collider != null) {
                     var nudge = rb!.linearVelocity.x > 0f ? -nudge_amount : nudge_amount;
                     rb!.AddForce(new Vector2(nudge, 0f), ForceMode2D.Impulse);
@@ -132,59 +163,57 @@ public sealed class Movement2 : MonoBehaviour {
             }
         }
 
-        // Jump-buffer + coyote time. Jump-buffering accounts for the player pressing jump just before landing. Essentially
-        // we assume that if the player pressed jump within a short time before landing, they meant to jump on landing.
-        // Coyote time allows the player to still jump a short time after leaving a platform (named after Wile E. Coyote)
-        if (input.JumpQueued && (Time.time - input.jump_queued_timer) <= input.jump_queue_threshold) {
-            var within_coyote = (Time.time - last_grounded_time) <= coyote_time;
+        if (input.JumpQueued && Time.time - input.jump_queued_timer <= input.jump_queue_threshold) {
+            var within_coyote = Time.time - last_grounded_time <= coyote_time;
             if (input.grounded || within_coyote) {
-                //  zero vertical velocity for consistent jump
                 rb!.linearVelocity = new Vector2(rb.linearVelocityX, 0f);
-                rb!.AddForce(Vector2.up * jumping_force, ForceMode2D.Impulse);
-                rb!.gravityScale = gravity_normal;
+                rb.gravityScale = gravity_normal;
+                rb.AddForce(Vector2.up * jumping_force, ForceMode2D.Impulse);
+                anim!.SetTrigger(ON_JUMP);
                 input.JumpQueued = false;
             }
         }
 
-        // Gravity handling: stronger gravity when falling, and extra when jump is released early
         if (rb!.linearVelocityY < 0f) {
             rb.gravityScale = gravity_fall;
+            // TODO: Add fall animation trigger
         }
         else if (input.JumpCanceled && rb.linearVelocityY > 0f) {
             rb.gravityScale = gravity_jump_cut;
+            // TODO: Add fall animation trigger
         }
-        else {
-            rb.gravityScale = gravity_normal;
-        }
+        else rb.gravityScale = gravity_normal;
 
-        // Clamp fall speed to prevent edge-case issues
-        if (rb.linearVelocityY < max_fall_speed) {
+        // given max_fall_speed is negative, we want to clamp to it if we are falling faster than it
+        if (rb.linearVelocityY < max_fall_speed)
             rb.linearVelocity = new Vector2(rb.linearVelocityX, max_fall_speed);
-        }
 
-        // Horizontal movement
-        // Rather than using the physics engine, we directly lerp velocity for snappy feel.
-        // We tune this so that ground movement is more responsive than air.
-        // While airborne we reduce input strength and cap max speed.
         var input_x = input.move.x;
-        if (!input.grounded) {
-            input_x *= air_control_multiplier;
-        }
+        if (!input.grounded) input_x *= air_control_multiplier;
 
         var target_x = input_x * max_speed * (input.grounded ? 1f : air_max_speed_multiplier);
-        var accel = input.grounded ? ground_acceleration : air_acceleration;
-        var new_x = Mathf.MoveTowards(rb.linearVelocity.x, target_x, accel * Time.fixedDeltaTime);
+        var new_x = Mathf.MoveTowards(
+            rb.linearVelocityX, target_x, (input.grounded ? ground_acceleration : air_acceleration) * Time.fixedDeltaTime
+        );
 
-        // If there's no input on ground, apply additional friction deceleration towards 0
-        if (input.grounded && Mathf.Abs(input.move.x) <= 0.01f) {
-            new_x = Mathf.MoveTowards(new_x, 0f, horizontal_deceleration * Time.fixedDeltaTime);
+        if (input.grounded && Mathf.Abs(input.move.x) <= 0.01f)
+            new_x = Mathf.MoveTowards(new_x, 0f, ground_friction * Time.fixedDeltaTime);
+
+        rb.linearVelocity = new Vector2(new_x, rb.linearVelocityY);
+        if (input.grounded) {
+            switch (Math.Abs(rb.linearVelocityX)) {
+                // If moving horizontally on the ground and not already in the run animation, trigger it.
+                case > 0.01f when !anim!.GetCurrentAnimatorStateInfo(0).IsName("Run"):
+                    anim!.SetTrigger(ON_RUN);
+                    break;
+                case <= 0.01f when !anim!.GetCurrentAnimatorStateInfo(0).IsName("Idle"):
+                    anim!.SetTrigger(ON_IDLE);
+                    break;
+            }
         }
 
-        // Apply computed horizontal velocity and flip sprite based on input or velocity
-        rb.linearVelocity = new Vector2(new_x, rb.linearVelocity.y);
-        if (Mathf.Abs(input.move.x) > 0.01f) {
+        if (Mathf.Abs(input.move.x) > 0.01f)
             sprite_renderer!.flipX = input.move.x < 0f;
-        }
     }
 }
 
@@ -192,7 +221,6 @@ public sealed class Movement2 : MonoBehaviour {
 internal struct InputState {
     [SerializeField] internal Vector2 move;
 
-    // Jump-buffering values. note: jump_queue_threshold is in seconds
     [SerializeField] internal float jump_queue_threshold;
     internal float jump_queued_timer;
     [SerializeField] private bool jump_queued;
@@ -200,9 +228,7 @@ internal struct InputState {
     public bool JumpQueued {
         get => jump_queued;
         set {
-            if (value) {
-                jump_queued_timer = Time.time;
-            }
+            if (value) jump_queued_timer = Time.time;
 
             jump_queued = value;
         }
@@ -216,10 +242,13 @@ internal struct InputState {
         get => jump_canceled;
         set {
             jump_canceled = value;
-            if (value) {
-                jump_queued = false;
-            }
+            if (value) jump_queued = false;
         }
     }
+}
+
+internal enum MovementPreset {
+    Snappy,
+    Relaxed
 }
 }

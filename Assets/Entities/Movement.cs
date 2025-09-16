@@ -32,7 +32,8 @@ public sealed class Movement : MonoBehaviour {
     private bool canceled_jump;
     [SerializeField] private float land_force = -5.22f;
     [SerializeField] private float grav_dampening = 6.875f;
-    [SerializeField] private float max_fall_speed = 10f;
+
+    // [SerializeField] private float max_fall_speed = 10f;
     [SerializeField] private float ground_distance = 0.05f;
     [SerializeField] private float friction_coef_ground = 60f;
     [SerializeField] private float friction_coef_air = 30f;
