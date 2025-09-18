@@ -1,45 +1,50 @@
 using System;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Entities {
-[RequireComponent(typeof(SpriteRenderer), typeof(CapsuleCollider2D))]
+[RequireComponent(typeof(SpriteRenderer), typeof(CapsuleCollider2D), typeof(AudioSource))]
 public sealed class Crystal : MonoBehaviour {
-    private SpriteRenderer sprite_renderer;
-    private CapsuleCollider2D collider_2d;
-    private Animator anim;
-
+    [SerializeField] private AudioResource pickup_sound_audio;
     [SerializeField] private AudioSource pickup_sound;
-
-    // [SerializeField] private AudioSource humming_sound;
     [SerializeField] private float rotation_speed;
+    private Animator anim;
+    private CapsuleCollider2D collider_2d;
+    private bool picked_up_fired;
+    private SpriteRenderer sprite_renderer;
 
     private void Awake() {
-        Debug.Assert(TryGetComponent(out sprite_renderer), "Sprite renderer missing!");
-        Debug.Assert(TryGetComponent(out collider_2d), "Collider missing!");
-        Debug.Assert(TryGetComponent(out anim), "Animator missing!");
-        Debug.Assert(pickup_sound != null, "Pickup sound missing!");
-        // Debug.Assert(humming_sound != null, "Humming sound missing!");
+        PickedUp += f => picked_up_fired = f;
+    }
+
+    private void OnTriggerEnter2D([NotNull] Collider2D other) {
+        if (picked_up_fired) return;
+        if (!other.gameObject.CompareTag("Player")) return;
+
+        if (pickup_sound == null || sprite_renderer == null)
+            throw new UnityException("Pickup sound and/or sprite renderer is null");
+
+        if (!pickup_sound.isPlaying) pickup_sound.Play();
+        PickedUp!.Invoke(true);
+
+        Destroy(gameObject, 0.5f);
+    }
+
+    private void OnValidate() {
+        if (sprite_renderer == null) Debug.Assert(TryGetComponent(out sprite_renderer), "Sprite renderer missing!");
+        if (collider_2d == null) Debug.Assert(TryGetComponent(out collider_2d), "Collider missing!");
+        if (anim == null) Debug.Assert(TryGetComponent(out anim), "Animator missing!");
+        if (pickup_sound == null) Debug.Assert(TryGetComponent(out pickup_sound), "Pickup sound missing!");
+        if (pickup_sound_audio == null) Debug.LogAssertion("Pickup sound audio not set!", this);
 
         anim!.speed = rotation_speed;
         collider_2d!.isTrigger = true;
-        // humming_sound.loop = true;
+
+        pickup_sound!.resource = pickup_sound_audio;
         pickup_sound.loop = false;
     }
 
-    // private void OnEnable() {
-        // humming_sound!.Play();
-    // }
-
-    private void OnCollisionEnter2D([NotNull] Collision2D other) {
-        if (other.gameObject == null || !other.gameObject.CompareTag("Player")) return;
-
-        // anim.SetTrigger("Collect");
-        // humming_sound!.Stop();
-        pickup_sound!.Play();
-        collider_2d!.enabled = false;
-        sprite_renderer!.sortingOrder = 10;
-        Destroy(gameObject, 0.5f);
-    }
+    public static event Action<bool> PickedUp;
 }
 }

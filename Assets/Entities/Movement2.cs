@@ -7,12 +7,6 @@ public sealed class Movement2 : MonoBehaviour {
     private static readonly int ON_RUN = Animator.StringToHash("OnRun");
     private static readonly int ON_IDLE = Animator.StringToHash("OnIdle");
     private static readonly int ON_JUMP = Animator.StringToHash("OnJump");
-    private Rigidbody2D rb;
-    private CapsuleCollider2D collider_2d;
-    private SpriteRenderer sprite_renderer;
-    private InputAction move;
-    private InputAction jump;
-    private Animator anim;
 
     [SerializeField] private InputActionAsset player_ctrl;
 
@@ -38,53 +32,14 @@ public sealed class Movement2 : MonoBehaviour {
 
     [Header("Presets")] [SerializeField] private MovementPreset preset = MovementPreset.Snappy;
     [SerializeField] [HideInInspector] private MovementPreset applied_preset = (MovementPreset)(-1);
-
-    private void apply_preset(MovementPreset p) {
-        switch (p) {
-            case MovementPreset.Snappy:
-                max_speed = 10f;
-                max_fall_speed = -40f;
-                ground_acceleration = 300f;
-                air_acceleration = 300f;
-                air_control_multiplier = 0.55f;
-                air_max_speed_multiplier = 1f;
-                ground_friction = 50f;
-                gravity_fall = 12f;
-                gravity_jump_cut = 20f;
-                jumping_force = 15;
-                gravity_normal = 6f;
-                coyote_time = 0.12f;
-                break;
-            case MovementPreset.Relaxed:
-                max_speed = 10f;
-                ground_acceleration = 160f;
-                air_acceleration = 60f;
-                air_control_multiplier = 0.75f;
-                air_max_speed_multiplier = 0.8f;
-                ground_friction = 30f;
-                gravity_fall = 4f;
-                gravity_jump_cut = 6f;
-                jumping_force = 8;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(p), p, null);
-        }
-    }
-
-    private void OnValidate() {
-        if (applied_preset == preset) return;
-
-        apply_preset(preset);
-        applied_preset = preset;
-    }
-
-    [ContextMenu("Apply Current Preset")]
-    private void apply_current_preset_context_menu() {
-        apply_preset(preset);
-        applied_preset = preset;
-    }
+    private Animator anim;
+    private CapsuleCollider2D collider_2d;
+    private InputAction jump;
 
     private float last_grounded_time = -100f;
+    private InputAction move;
+    private Rigidbody2D rb;
+    private SpriteRenderer sprite_renderer;
 
     private void Awake() {
         Debug.Assert(TryGetComponent(out rb), "Rigidbody2D component missing!");
@@ -106,32 +61,6 @@ public sealed class Movement2 : MonoBehaviour {
         move.canceled += on_move_canceled;
         jump.performed += on_jump_performed;
         jump.canceled += on_jump_canceled;
-    }
-
-    private void on_jump_canceled(InputAction.CallbackContext _) {
-        input.JumpCanceled = true;
-    }
-
-    private void on_jump_performed(InputAction.CallbackContext _) {
-        input.JumpQueued = true;
-    }
-
-    private void on_move_canceled(InputAction.CallbackContext _) {
-        input.move = Vector2.zero;
-    }
-
-    private void on_move_performed(InputAction.CallbackContext obj) {
-        input.move = obj.ReadValue<Vector2>();
-    }
-
-    private void OnEnable() {
-        move!.Enable();
-        jump!.Enable();
-    }
-
-    private void OnDisable() {
-        move!.Disable();
-        jump!.Disable();
     }
 
     private void FixedUpdate() {
@@ -193,7 +122,8 @@ public sealed class Movement2 : MonoBehaviour {
 
         var target_x = input_x * max_speed * (input.grounded ? 1f : air_max_speed_multiplier);
         var new_x = Mathf.MoveTowards(
-            rb.linearVelocityX, target_x, (input.grounded ? ground_acceleration : air_acceleration) * Time.fixedDeltaTime
+            rb.linearVelocityX, target_x,
+            (input.grounded ? ground_acceleration : air_acceleration) * Time.fixedDeltaTime
         );
 
         if (input.grounded && Mathf.Abs(input.move.x) <= 0.01f)
@@ -214,6 +144,83 @@ public sealed class Movement2 : MonoBehaviour {
 
         if (Mathf.Abs(input.move.x) > 0.01f)
             sprite_renderer!.flipX = input.move.x < 0f;
+    }
+
+    private void OnEnable() {
+        move!.Enable();
+        jump!.Enable();
+    }
+
+    private void OnDisable() {
+        move!.Disable();
+        jump!.Disable();
+    }
+
+    private void OnValidate() {
+        if (applied_preset == preset) return;
+
+        apply_preset(preset);
+        applied_preset = preset;
+    }
+
+    public event Action Jumped;
+    public event Action<bool> WalkingChanged;
+
+    private void apply_preset(MovementPreset p) {
+        switch (p) {
+            case MovementPreset.Snappy:
+                max_speed = 10f;
+                max_fall_speed = -40f;
+                ground_acceleration = 300f;
+                air_acceleration = 300f;
+                air_control_multiplier = 0.55f;
+                air_max_speed_multiplier = 1f;
+                ground_friction = 50f;
+                gravity_fall = 12f;
+                gravity_jump_cut = 20f;
+                jumping_force = 15;
+                gravity_normal = 6f;
+                coyote_time = 0.12f;
+                break;
+            case MovementPreset.Relaxed:
+                max_speed = 10f;
+                ground_acceleration = 160f;
+                air_acceleration = 60f;
+                air_control_multiplier = 0.75f;
+                air_max_speed_multiplier = 0.8f;
+                ground_friction = 30f;
+                gravity_fall = 4f;
+                gravity_jump_cut = 6f;
+                jumping_force = 8;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(p), p, null);
+        }
+    }
+
+    [ContextMenu("Apply Current Preset")]
+    private void apply_current_preset_context_menu() {
+        apply_preset(preset);
+        applied_preset = preset;
+    }
+
+    private void on_jump_canceled(InputAction.CallbackContext _) {
+        input.JumpCanceled = true;
+    }
+
+    private void on_jump_performed(InputAction.CallbackContext _) {
+        input.JumpQueued = true;
+        Jumped!.Invoke();
+    }
+
+    private void on_move_canceled(InputAction.CallbackContext _) {
+        input.move = Vector2.zero;
+        WalkingChanged?.Invoke(false);
+    }
+
+    private void on_move_performed(InputAction.CallbackContext obj) {
+        input.move = obj.ReadValue<Vector2>();
+        WalkingChanged?.Invoke(true);
     }
 }
 
