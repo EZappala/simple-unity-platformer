@@ -8,8 +8,8 @@ namespace Entities {
 public sealed class DeathTrigger : MonoBehaviour {
     private TilemapCollider2D collider_2d;
 
-    private void Awake() {
-        if (collider_2d == null && !TryGetComponent(out collider_2d)) throw new UnityException("Collider2D component missing!");
+    private void Start() {
+        if (!TryGetComponent(out collider_2d)) throw new UnityException("Collider2D component missing!");
 
         if (collider_2d != null) collider_2d.isTrigger = true;
     }
