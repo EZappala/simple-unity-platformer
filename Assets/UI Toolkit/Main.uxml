@@ -4,5 +4,5 @@
         <ui:Label text="Fallen Realm" name="Title" style="-unity-text-align: upper-center; font-size: 200%; -unity-font-definition: url(&quot;project://database/Assets/UI%20Toolkit/alagard.ttf?fileID=12800000&amp;guid=b35f8b0812b500346a1d273506801866&amp;type=3#alagard&quot;); -unity-background-scale-mode: stretch-to-fill; border-top-width: 0; margin-top: 10%; color: rgb(184, 194, 185);" />
         <ui:Button text="Begin" double-click-selects-word="false" triple-click-selects-line="false" display-tooltip-when-elided="false" name="PlayButton" class="game-text" style="background-image: none; background-color: rgb(184, 194, 185); width: 20%; height: 12%; align-self: center; margin-top: 5%; border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; font-size: 100%;" />
     </ui:VisualElement>
-    <ui:Label text="Created by Éloïse Zappala&#10;(eloise.zappala@pace.edu)" name="Footer" class="game-text" style="color: rgb(184, 194, 185); font-size: 50%;" />
+    <ui:Label text="Created by Eloise Zappala&#10;(eloise.zappala@pace.edu)" name="Footer" parse-escape-sequences="false" class="game-text" style="color: rgb(184, 194, 185); font-size: 50%;" />
 </ui:UXML>
