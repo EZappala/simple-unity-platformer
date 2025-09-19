@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 using static UnityEngine.Random;
+using static UnityEngine.SceneManagement.SceneManager;
 
 namespace Entities {
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D), typeof(SpriteRenderer))]
@@ -13,14 +15,37 @@ public sealed class PlayerCharacter : MonoBehaviour {
     [SerializeField] private AudioResource walk_sound_audio;
     [SerializeField] private List<AudioResource> jump_sounds;
 
-    public uint collected;
+    [HideInInspector] public uint collected;
+    [HideInInspector] public bool needs_respawn;
     private Movement2 movement;
 
+    private Scene scene_to_reload;
+
     private void Awake() {
-        Crystal.PickedUp += OnCrystalPickedUp;
+        validate();
+        if (walk_src != null) walk_src.Stop();
+        else throw new UnityException("Walk sound source missing!");
+
+        if (jump_src != null) jump_src.Stop();
+        else throw new UnityException("Jump sound source missing!");
+
+        collected = 0;
     }
 
-    private void OnValidate() {
+    private void FixedUpdate() {
+        if (transform.position.y > -3f) return;
+
+        LoadScene(GetActiveScene().buildIndex, LoadSceneMode.Single);
+    }
+
+    private void OnDestroy() {
+        movement!.Jumped -= on_movement_on_jumped;
+        movement!.WalkingChanged -= on_movement_on_walking_changed;
+    }
+
+    public static event Action<uint> CollectedChanged;
+
+    private void validate() {
         if (movement == null) Debug.Assert(TryGetComponent(out movement), "Movement component missing!");
         if (walk_src == null) throw new UnityException("Walk sound source missing!");
         if (jump_src == null) throw new UnityException("Jump sound source missing!");
@@ -37,7 +62,6 @@ public sealed class PlayerCharacter : MonoBehaviour {
         if (movement != null) movement.WalkingChanged += on_movement_on_walking_changed;
     }
 
-    public static event Action<uint> CollectedChanged;
 
     private void on_movement_on_jumped() {
         if (jump_src == null) throw new UnityException("Jump sound is null");
@@ -64,8 +88,7 @@ public sealed class PlayerCharacter : MonoBehaviour {
         }
     }
 
-    // Listen to crystal pickups, should fire when PickedUp event is invoked
-    private void OnCrystalPickedUp(bool _) {
+    internal void OnCrystalPickedUp(bool _) {
         collected++;
         CollectedChanged?.Invoke(collected);
     }

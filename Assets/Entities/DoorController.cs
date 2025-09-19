@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 namespace Entities {
@@ -12,6 +13,10 @@ internal enum Level {
 }
 
 public sealed class DoorController : MonoBehaviour {
+    [SerializeField] private AudioResource deny_sound;
+    [SerializeField] private AudioResource success_sound;
+    [SerializeField] private AudioSource audio_source;
+
     private readonly Dictionary<Level, uint> level_requirements = new() {
         { Level.L0, 1 },
         { Level.L1, 3 },
@@ -25,6 +30,7 @@ public sealed class DoorController : MonoBehaviour {
     private SpriteRenderer sprite_renderer;
 
     private void Awake() {
+        validate();
         validate_level_requirements();
     }
 
@@ -45,25 +51,43 @@ public sealed class DoorController : MonoBehaviour {
         var player = other.GetComponent<PlayerCharacter>();
         if (player == null) throw new UnityException("PlayerCharacter component missing on player!");
 
-        if (player.collected < required_crystals) return;
+        if (player.collected < required_crystals) {
+            if (audio_source == null || audio_source.isPlaying) return;
+
+            audio_source.resource = deny_sound;
+            audio_source.loop = false;
+            audio_source.Play();
+            return;
+        }
 
         switch (current_level) {
             case Level.L0:
-                change_level(Level.L1);
+                do_change_level(Level.L1);
                 break;
             case Level.L1:
-                change_level(Level.L2);
+                do_change_level(Level.L2);
                 break;
             case Level.L2:
-                change_level();
+                do_change_level(null);
                 break;
             default:
                 throw new UnityException("Invalid level!");
         }
     }
 
-    private void OnValidate() {
+    private void do_change_level(Level? next_level) {
+        if (audio_source != null && !audio_source.isPlaying) {
+            audio_source.resource = success_sound;
+            audio_source.loop = false;
+            audio_source.Play();
+        }
+
+        change_level(next_level);
+    }
+
+    private void validate() {
         if (sprite_renderer == null) Debug.Assert(TryGetComponent(out sprite_renderer), "Sprite renderer missing!");
+        if (audio_source == null) Debug.Assert(TryGetComponent(out audio_source), "Audio source missing!");
         var colliders = GetComponents<CapsuleCollider2D>();
         switch (colliders) {
             case { Length: < 2 }:
@@ -82,14 +106,12 @@ public sealed class DoorController : MonoBehaviour {
         door_trigger!.isTrigger = true;
     }
 
-    private static void change_level(Level next_level) {
-        var scene_name = next_level.ToString();
-        SceneManager.LoadScene(scene_name);
-    }
-
     // This should only be called when the player finishes the last level
-    private static void change_level([CanBeNull] string next_level = "WinScreen") {
-        SceneManager.LoadScene(next_level);
+    private static void change_level(Level? level, [CanBeNull] string next_level = "MainMenu") {
+        if (level == null && next_level == null)
+            throw new UnityException("Both level and next_level cannot be null!");
+
+        SceneManager.LoadScene(level != null ? level.ToString() : next_level);
     }
 
     private void validate_level_requirements() {

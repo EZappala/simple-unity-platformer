@@ -21,6 +21,11 @@ public sealed class UIController : MonoBehaviour {
         if (play_button != null) play_button.clicked += on_play_clicked;
     }
 
+    private void OnDestroy() {
+        PlayerCharacter.CollectedChanged -= on_crystal_picked_up;
+        play_button!.clicked -= on_play_clicked;
+    }
+
     private static void on_play_clicked() {
         SceneManager.LoadScene("L0");
     }

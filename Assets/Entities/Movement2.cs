@@ -31,7 +31,6 @@ public sealed class Movement2 : MonoBehaviour {
     [SerializeField] private float ground_friction;
 
     [Header("Presets")] [SerializeField] private MovementPreset preset = MovementPreset.Snappy;
-    [SerializeField] [HideInInspector] private MovementPreset applied_preset = (MovementPreset)(-1);
     private Animator anim;
     private CapsuleCollider2D collider_2d;
     private InputAction jump;
@@ -156,11 +155,11 @@ public sealed class Movement2 : MonoBehaviour {
         jump!.Disable();
     }
 
-    private void OnValidate() {
-        if (applied_preset == preset) return;
-
-        apply_preset(preset);
-        applied_preset = preset;
+    private void OnDestroy() {
+        move!.performed -= on_move_performed;
+        move!.canceled -= on_move_canceled;
+        jump!.performed -= on_jump_performed;
+        jump!.canceled -= on_jump_canceled;
     }
 
     public event Action Jumped;
@@ -201,7 +200,6 @@ public sealed class Movement2 : MonoBehaviour {
     [ContextMenu("Apply Current Preset")]
     private void apply_current_preset_context_menu() {
         apply_preset(preset);
-        applied_preset = preset;
     }
 
     private void on_jump_canceled(InputAction.CallbackContext _) {
@@ -219,7 +217,7 @@ public sealed class Movement2 : MonoBehaviour {
     }
 
     private void on_move_performed(InputAction.CallbackContext obj) {
-        input.move = obj.ReadValue<Vector2>();
+        input.move.x = obj.ReadValue<Vector2>().x;
         WalkingChanged?.Invoke(true);
     }
 }
