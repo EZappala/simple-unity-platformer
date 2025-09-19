@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/level.uss?fileID=7433441132597879392&amp;guid=536e154415b696e4f9e0aac719ca2f5b&amp;type=3#level" />
+    <ui:VisualElement name="Main" style="flex-grow: 1; flex-direction: column; align-items: center; justify-content: center; background-color: rgba(183, 193, 184, 0.67); visibility: hidden; display: flex;">
+        <ui:Label text="Thank you my dear." name="End" class="dialogue-text game-text" style="font-size: 136px; height: 138px;" />
+        <ui:Label text="Goodbye &gt;:)" name="End2" enable-rich-text="false" class="game-text" style="-unity-text-align: upper-center; font-size: 136px;" />
+    </ui:VisualElement>
+</ui:UXML>

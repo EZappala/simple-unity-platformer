@@ -6,7 +6,7 @@ using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 namespace Entities {
-internal enum Level {
+public enum Level {
     L0,
     L1,
     L2
@@ -25,11 +25,18 @@ public sealed class DoorController : MonoBehaviour {
 
     private CapsuleCollider2D collider_2d;
 
-    private Level? current_level;
+    internal Level? current_level;
     private CapsuleCollider2D door_trigger;
     private SpriteRenderer sprite_renderer;
 
+    public static event Action<Level?> ChangeLevelRequested;
+
     private void Awake() {
+        var scene_name = SceneManager.GetActiveScene().name;
+        if (!Enum.TryParse(scene_name, out Level level)) throw new UnityException("Invalid scene name!");
+
+        current_level = level;
+
         validate();
         validate_level_requirements();
     }
@@ -37,14 +44,8 @@ public sealed class DoorController : MonoBehaviour {
     private void OnTriggerEnter2D([NotNull] Collider2D other) {
         if (!other.gameObject.CompareTag("Player")) return;
 
-        if (current_level == null) {
-            var scene_name = SceneManager.GetActiveScene().name;
-            if (!Enum.TryParse(scene_name, out Level level)) throw new UnityException("Invalid scene name!");
-
-            current_level = level;
-        }
-
-        Debug.Assert(level_requirements != null, nameof(level_requirements) + " != null");
+        if (level_requirements == null) throw new UnityException("Level requirements dictionary is null!");
+        if (current_level == null) throw new UnityException("Current level is null!");
         if (!level_requirements.TryGetValue(current_level.Value, out var required_crystals))
             throw new UnityException("Level not found in requirements dictionary!");
 
@@ -76,6 +77,7 @@ public sealed class DoorController : MonoBehaviour {
     }
 
     private void do_change_level(Level? next_level) {
+        ChangeLevelRequested?.Invoke(next_level);
         if (audio_source != null && !audio_source.isPlaying) {
             audio_source.resource = success_sound;
             audio_source.loop = false;
@@ -86,8 +88,11 @@ public sealed class DoorController : MonoBehaviour {
     }
 
     private void validate() {
-        if (sprite_renderer == null) Debug.Assert(TryGetComponent(out sprite_renderer), "Sprite renderer missing!");
-        if (audio_source == null) Debug.Assert(TryGetComponent(out audio_source), "Audio source missing!");
+        if (sprite_renderer == null && !TryGetComponent(out sprite_renderer))
+            throw new UnityException("Sprite renderer missing!");
+        if (audio_source == null && !TryGetComponent(out audio_source))
+            throw new UnityException("Audio source missing!");
+
         var colliders = GetComponents<CapsuleCollider2D>();
         switch (colliders) {
             case { Length: < 2 }:
@@ -100,33 +105,39 @@ public sealed class DoorController : MonoBehaviour {
 
         door_trigger = colliders[0].isTrigger ? colliders[0] : colliders[1];
         collider_2d = colliders[0].isTrigger ? colliders[1] : colliders[0];
-        if (door_trigger == null) Debug.Assert(TryGetComponent(out door_trigger), "Collider missing!");
-        if (collider_2d == null) Debug.Assert(TryGetComponent(out collider_2d), "Collider missing!");
+        if ((door_trigger == null && !TryGetComponent(out door_trigger)) ||
+            (collider_2d == null && !TryGetComponent(out collider_2d))) throw new UnityException("Collider missing!");
 
         door_trigger!.isTrigger = true;
     }
 
     // This should only be called when the player finishes the last level
-    private static void change_level(Level? level, [CanBeNull] string next_level = "MainMenu") {
+    private void change_level(Level? level, [CanBeNull] string next_level = "MainMenu") {
         if (level == null && next_level == null)
             throw new UnityException("Both level and next_level cannot be null!");
+
+        if (audio_source != null && audio_source.clip != null) {
+            var delay = audio_source.clip.length;
+            StartCoroutine(wait_and_load_scene(delay, level, next_level));
+        }
+        else SceneManager.LoadScene(level != null ? level.ToString() : next_level);
+    }
+
+    private static System.Collections.IEnumerator wait_and_load_scene(float delay, Level? level,
+        [CanBeNull] string next_level) {
+        yield return new WaitForSeconds(delay);
 
         SceneManager.LoadScene(level != null ? level.ToString() : next_level);
     }
 
     private void validate_level_requirements() {
-        if (level_requirements == null) return;
-        if (current_level == null) return;
+        if (level_requirements == null) throw new UnityException("Level requirements dictionary is null!");
+        if (current_level == null) throw new UnityException("Current level is null!");
 
         var crystals = FindObjectsByType<Crystal>(FindObjectsSortMode.InstanceID);
         if (crystals == null) return;
 
         var crystal_count = (uint)crystals.Length;
-        if (level_requirements[current_level.Value] == crystal_count) return;
-
-        Debug.LogWarning(
-            $"Level {current_level} has {crystal_count} crystals, but requires {level_requirements[current_level.Value]} to open the door. Consider updating the requirements dictionary.",
-            this);
         level_requirements[current_level.Value] = crystal_count;
     }
 }

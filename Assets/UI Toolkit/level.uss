@@ -3,6 +3,7 @@
 
 .game-text {
     -unity-font-definition: url("project://database/Assets/UI%20Toolkit/alagard.ttf?fileID=12800000&guid=b35f8b0812b500346a1d273506801866&type=3#alagard");
+    color: rgb(0, 0, 0);
 }
 
 .dialogue-text {

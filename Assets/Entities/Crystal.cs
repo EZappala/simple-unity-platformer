@@ -39,11 +39,11 @@ public sealed class Crystal : MonoBehaviour {
     }
 
     private void validate() {
-        if (sprite_renderer == null) Debug.Assert(TryGetComponent(out sprite_renderer), "Sprite renderer missing!");
-        if (collider_2d == null) Debug.Assert(TryGetComponent(out collider_2d), "Collider missing!");
-        if (anim == null) Debug.Assert(TryGetComponent(out anim), "Animator missing!");
-        if (pickup_sound == null) Debug.Assert(TryGetComponent(out pickup_sound), "Pickup sound missing!");
-        if (pickup_sound_audio == null) Debug.LogAssertion("Pickup sound audio not set!", this);
+        if (sprite_renderer == null && !TryGetComponent(out sprite_renderer)) throw new UnityException("Sprite renderer missing!");
+        if (collider_2d == null && !TryGetComponent(out collider_2d)) throw new UnityException("Collider missing!");
+        if (anim == null && !TryGetComponent(out anim)) throw new UnityException("Animator missing!");
+        if (pickup_sound == null && !TryGetComponent(out pickup_sound)) throw new UnityException("Pickup sound missing!");
+        if (pickup_sound_audio == null) throw new UnityException("Pickup sound audio not set!");
 
         anim!.speed = rotation_speed;
         collider_2d!.isTrigger = true;

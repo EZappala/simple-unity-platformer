@@ -1,14 +1,16 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputSystem;
+using static UnityEngine.Mathf;
+using static UnityEngine.Physics2D;
+using static UnityEngine.Time;
 
 namespace Entities {
 public sealed class Movement2 : MonoBehaviour {
     private static readonly int ON_RUN = Animator.StringToHash("OnRun");
     private static readonly int ON_IDLE = Animator.StringToHash("OnIdle");
     private static readonly int ON_JUMP = Animator.StringToHash("OnJump");
-
-    [SerializeField] private InputActionAsset player_ctrl;
 
     [SerializeField] private InputState input;
     [SerializeField] private float jumping_force = 150f;
@@ -41,37 +43,33 @@ public sealed class Movement2 : MonoBehaviour {
     private SpriteRenderer sprite_renderer;
 
     private void Awake() {
-        Debug.Assert(TryGetComponent(out rb), "Rigidbody2D component missing!");
-        Debug.Assert(TryGetComponent(out collider_2d), "CapsuleCollider2D component missing!");
-        Debug.Assert(TryGetComponent(out sprite_renderer), "SpriteRenderer component missing!");
-        Debug.Assert(TryGetComponent(out anim), "Animator component missing!");
-        Debug.Assert(player_ctrl != null, "Player Input Action Asset not set!");
+        if (!TryGetComponent(out rb) || !TryGetComponent(out collider_2d) || !TryGetComponent(out sprite_renderer) ||
+            !TryGetComponent(out anim)) throw new UnityException("Required component missing!");
 
-        var ia = player_ctrl!.FindActionMap("Player", true);
-        if (ia != null) {
-            move = ia.FindAction("move", true);
-            jump = ia.FindAction("jump", true);
-        }
+        if (actions == null) throw new UnityException("Input system actions not found!");
 
-        Debug.Assert(move != null, nameof(move) + " != null");
-        Debug.Assert(jump != null, nameof(jump) + " != null");
+        move = actions.FindAction("move", true);
+        jump = actions.FindAction("jump", true);
+
+        if (move == null || jump == null) throw new UnityException("Failed to find move and/or jump action!");
 
         move.performed += on_move_performed;
         move.canceled += on_move_canceled;
+
         jump.performed += on_jump_performed;
         jump.canceled += on_jump_canceled;
     }
 
     private void FixedUpdate() {
         var bounds = collider_2d!.bounds;
-        var cast = Physics2D.CapsuleCast(collider_2d!.bounds.center, bounds.size,
+        var cast = CapsuleCast(collider_2d!.bounds.center, bounds.size,
             CapsuleDirection2D.Vertical, 0f, Vector2.down, bounds.extents.y + collision_tolerance,
             LayerMask.GetMask("Ground"));
 
         input.grounded = cast.collider != null;
         switch (input.grounded) {
             case true: {
-                last_grounded_time = Time.time;
+                last_grounded_time = time;
                 if (input.JumpCanceled) {
                     input.JumpCanceled = false;
                     rb!.gravityScale = gravity_normal;
@@ -79,8 +77,8 @@ public sealed class Movement2 : MonoBehaviour {
 
                 break;
             }
-            case false when Mathf.Abs(rb!.linearVelocityY) > 0.001f: {
-                var hit = Physics2D.Raycast(collider_2d!.bounds.center, Vector2.up,
+            case false when Abs(rb!.linearVelocityY) > 0.001f: {
+                var hit = Raycast(collider_2d!.bounds.center, Vector2.up,
                     collider_2d.bounds.extents.y + collision_tolerance, LayerMask.GetMask("Ground"));
                 if (hit.collider != null) {
                     var nudge = rb!.linearVelocity.x > 0f ? -nudge_amount : nudge_amount;
@@ -91,8 +89,8 @@ public sealed class Movement2 : MonoBehaviour {
             }
         }
 
-        if (input.JumpQueued && Time.time - input.jump_queued_timer <= input.jump_queue_threshold) {
-            var within_coyote = Time.time - last_grounded_time <= coyote_time;
+        if (input.JumpQueued && time - input.jump_queued_timer <= input.jump_queue_threshold) {
+            var within_coyote = time - last_grounded_time <= coyote_time;
             if (input.grounded || within_coyote) {
                 rb!.linearVelocity = new Vector2(rb.linearVelocityX, 0f);
                 rb.gravityScale = gravity_normal;
@@ -120,13 +118,13 @@ public sealed class Movement2 : MonoBehaviour {
         if (!input.grounded) input_x *= air_control_multiplier;
 
         var target_x = input_x * max_speed * (input.grounded ? 1f : air_max_speed_multiplier);
-        var new_x = Mathf.MoveTowards(
+        var new_x = MoveTowards(
             rb.linearVelocityX, target_x,
-            (input.grounded ? ground_acceleration : air_acceleration) * Time.fixedDeltaTime
+            (input.grounded ? ground_acceleration : air_acceleration) * fixedDeltaTime
         );
 
-        if (input.grounded && Mathf.Abs(input.move.x) <= 0.01f)
-            new_x = Mathf.MoveTowards(new_x, 0f, ground_friction * Time.fixedDeltaTime);
+        if (input.grounded && Abs(input.move.x) <= 0.01f)
+            new_x = MoveTowards(new_x, 0f, ground_friction * fixedDeltaTime);
 
         rb.linearVelocity = new Vector2(new_x, rb.linearVelocityY);
         if (input.grounded) {
@@ -141,7 +139,7 @@ public sealed class Movement2 : MonoBehaviour {
             }
         }
 
-        if (Mathf.Abs(input.move.x) > 0.01f)
+        if (Abs(input.move.x) > 0.01f)
             sprite_renderer!.flipX = input.move.x < 0f;
     }
 
@@ -233,7 +231,7 @@ internal struct InputState {
     public bool JumpQueued {
         get => jump_queued;
         set {
-            if (value) jump_queued_timer = Time.time;
+            if (value) jump_queued_timer = time;
 
             jump_queued = value;
         }

@@ -46,17 +46,17 @@ public sealed class PlayerCharacter : MonoBehaviour {
     public static event Action<uint> CollectedChanged;
 
     private void validate() {
-        if (movement == null) Debug.Assert(TryGetComponent(out movement), "Movement component missing!");
+        if (movement == null && !TryGetComponent(out movement)) throw new UnityException("Movement component missing!");
         if (walk_src == null) throw new UnityException("Walk sound source missing!");
         if (jump_src == null) throw new UnityException("Jump sound source missing!");
 
-        if (walk_sound_audio == null) Debug.LogAssertion("Pickup sound audio not set!", this);
+        if (walk_sound_audio == null) throw new UnityException("Pickup sound audio not set!");
+
         walk_src!.resource = walk_sound_audio;
         walk_src.loop = true;
 
-        foreach (var sound in (jump_sounds ?? throw new UnityException("Invalid operation")).Where(static sound =>
-                     sound == null))
-            Debug.LogAssertion("One of the jump sounds is null!", sound);
+        if ((jump_sounds ?? throw new UnityException("Invalid operation")).Where(static sound => sound == null).Any())
+            throw new UnityException("One of the jump sounds is null!");
 
         if (movement != null) movement.Jumped += on_movement_on_jumped;
         if (movement != null) movement.WalkingChanged += on_movement_on_walking_changed;
