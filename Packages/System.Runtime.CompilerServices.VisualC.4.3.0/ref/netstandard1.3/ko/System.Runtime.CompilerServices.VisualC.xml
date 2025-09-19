@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Runtime.CompilerServices.VisualC</name>
+  </assembly>
+  <members>
+    <member name="T:System.Runtime.CompilerServices.CallConvCdecl">
+      <summary>메서드에서 Cdecl 호출 규칙을 사용해야 함을 나타냅니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvFastcall">
+      <summary>이 버전의 .NET Framework에서는 이 호출 규칙이 지원되지 않습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvStdcall">
+      <summary>메서드에서 StdCall 호출 규칙을 사용해야 함을 나타냅니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvThiscall">
+      <summary>메서드에서 ThisCall 호출 규칙을 사용해야 함을 나타냅니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsBoxed">
+      <summary>한정자가 지정된 참조 형식이 boxed 값 형식임을 나타냅니다.이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsByValue">
+      <summary>한정자가 지정된 메서드 인수를 값으로 전달된 개체 의미가 포함된 인수로 해석해야 함을 나타냅니다.이 한정자는 참조 형식에 적용됩니다.  이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsCopyConstructed">
+      <summary>형식의 값을 복사하려면 해당 형식에 제공되는 복사 생성자를 사용해야 함을 나타냅니다.  이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsExplicitlyDereferenced">
+      <summary>관리되는 포인터가 메서드 시그니처 내의 포인터 매개 변수를 나타냄을 의미합니다.이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsImplicitlyDereferenced">
+      <summary>한정자가 지정된 가비지 수집 참조가 메서드 시그니처 내의 참조 매개 변수를 나타냄을 의미합니다.이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsJitIntrinsic">
+      <summary>한정자가 지정된 메서드가 JIT(Just-In-Time) 컴파일러에서 특수 코드를 생성할 수 있는 내장 값이라는 것을 나타냅니다.이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsLong">
+      <summary>한정자가 지정된 정수가 표준 C++ long 값이라는 것을 나타냅니다.이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsSignUnspecifiedByte">
+      <summary>한정자가 signed 또는 unsigned가 아님을 나타냅니다.이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsUdtReturn">
+      <summary>반환 형식이 사용자 정의 형식임을 나타냅니다.이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.NativeCppClassAttribute">
+      <summary>관리되지 않는 형식임을 나타내는 메타데이터를 어셈블리에 적용합니다.  이 클래스는 상속될 수 없습니다.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.NativeCppClassAttribute.#ctor">
+      <summary>
+        <see cref="T:System.Runtime.CompilerServices.NativeCppClassAttribute" /> 클래스의 새 인스턴스를 초기화합니다. </summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.RequiredAttributeAttribute">
+      <summary>가져오기를 수행하는 컴파일러가 형식 정의의 의미를 완전히 이해할 수 없으면 형식 정의를 사용하지 않도록 지정합니다.  이 클래스는 상속될 수 없습니다. </summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.RequiredAttributeAttribute.#ctor(System.Type)">
+      <summary>
+        <see cref="T:System.Runtime.CompilerServices.RequiredAttributeAttribute" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+      <param name="requiredContract">가져오기를 수행하는 컴파일러가 완전히 이해해야 하는 형식입니다.이 매개 변수는 .NET Framework 버전 2.0 이상에서는 지원되지 않습니다. </param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.RequiredAttributeAttribute.RequiredContract">
+      <summary>가져오기를 수행하는 컴파일러가 완전히 이해해야 하는 형식을 가져옵니다.</summary>
+      <returns>가져오기를 수행하는 컴파일러가 완전히 이해해야 하는 형식입니다. </returns>
+    </member>
+  </members>
+</doc>

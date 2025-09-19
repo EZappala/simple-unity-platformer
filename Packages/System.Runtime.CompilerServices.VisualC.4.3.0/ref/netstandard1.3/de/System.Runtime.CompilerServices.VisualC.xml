@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Runtime.CompilerServices.VisualC</name>
+  </assembly>
+  <members>
+    <member name="T:System.Runtime.CompilerServices.CallConvCdecl">
+      <summary>Gibt an, dass eine Methode die Cdecl-Aufrufkonvention verwenden soll.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvFastcall">
+      <summary>Diese Aufrufkonvention wird in der vorliegenden Version von .NET Framework nicht unterstützt.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvStdcall">
+      <summary>Gibt an, dass eine Methode die StdCall-Aufrufkonvention verwenden soll.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvThiscall">
+      <summary>Gibt an, dass eine Methode die ThisCall-Aufrufkonvention verwenden soll.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsBoxed">
+      <summary>Gibt an, dass der geänderte Verweistyp einen geschachtelten Werttyp darstellt.Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsByValue">
+      <summary>Gibt an, dass ein modifiziertes Methodenargument als Objekt mit Wertübergabe-Semantik interpretiert werden soll.Dieser Modifizierer wird auf Verweistypen angewendet.  Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsCopyConstructed">
+      <summary>Gibt an, dass zum Kopieren von Werten dieses Typs der vom Typ bereitgestellte Kopierkonstruktor verwendet werden muss.  Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsExplicitlyDereferenced">
+      <summary>Gibt an, dass ein verwalteter Zeiger einen Zeigerparameter in einer Methodensignatur darstellt.Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsImplicitlyDereferenced">
+      <summary>Gibt an, dass der geänderte Garbage Collection-Verweis einen Verweisparameter in einer Methodensignatur darstellt.Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsJitIntrinsic">
+      <summary>Gibt an, dass eine modifizierte Methode ein systeminterner Wert ist, für den der JIT (Just-In-Time)-Compiler speziellen Code generieren kann.Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsLong">
+      <summary>Gibt an, dass eine geänderte ganze Zahl einen long-Standardwert in C++ darstellt.Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsSignUnspecifiedByte">
+      <summary>Gibt an, dass ein Modifizierer weder signed noch unsigned lautet.Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsUdtReturn">
+      <summary>Gibt an, dass ein Rückgabetyp einen benutzerdefinierten Typ darstellt.Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.NativeCppClassAttribute">
+      <summary>Wendet Metadaten auf eine Assembly an, die angibt, dass ein Typ einen nicht verwalteten Typ darstellt.  Diese Klasse kann nicht vererbt werden.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.NativeCppClassAttribute.#ctor">
+      <summary>Initialisiert eine neue Instanz der <see cref="T:System.Runtime.CompilerServices.NativeCppClassAttribute" />-Klasse. </summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.RequiredAttributeAttribute">
+      <summary>Gibt an, dass ein importierender Compiler die Semantik einer Typdefinition vollständig verstehen oder deren Verwendung verweigern muss.  Diese Klasse kann nicht vererbt werden. </summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.RequiredAttributeAttribute.#ctor(System.Type)">
+      <summary>Initialisiert eine neue Instanz der <see cref="T:System.Runtime.CompilerServices.RequiredAttributeAttribute" />-Klasse.</summary>
+      <param name="requiredContract">Ein Typ, über den ein importierender Compiler vollständige Kenntnisse haben muss.Dieser Parameter wird in .NET Framework, Version 2.0 und höher, nicht unterstützt. </param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.RequiredAttributeAttribute.RequiredContract">
+      <summary>Ruft einen Typ ab, über den ein importierender Compiler vollständige Kenntnisse haben muss.</summary>
+      <returns>Ein Typ, über den ein importierender Compiler vollständige Kenntnisse haben muss. </returns>
+    </member>
+  </members>
+</doc>

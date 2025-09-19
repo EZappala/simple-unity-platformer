@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Runtime.CompilerServices.VisualC</name>
+  </assembly>
+  <members>
+    <member name="T:System.Runtime.CompilerServices.CallConvCdecl">
+      <summary>Указывает, что метод должен использовать соглашение о вызовах Cdecl.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvFastcall">
+      <summary>Это соглашение о вызовах не поддерживается в данной версии платформы .NET Framework.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvStdcall">
+      <summary>Указывает, что метод должен использовать соглашение о вызовах StdCall.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvThiscall">
+      <summary>Указывает, что метод должен использовать соглашение о вызовах ThisCall.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsBoxed">
+      <summary>Указывает, что измененный ссылочный тип является упакованным типом значения.Этот класс не наследуется.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsByValue">
+      <summary>Указывает, что измененный аргумент метода следует интерпретировать как имеющий семантику объекта, передаваемого по значению.Данный модификатор применяется к ссылочным типам.  Этот класс не наследуется.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsCopyConstructed">
+      <summary>Указывает, что при любом копировании значений данного типа необходимо использовать конструктор копий, предоставляемый этим типом.  Этот класс не наследуется.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsExplicitlyDereferenced">
+      <summary>Указывает, что управляемый указатель представляет параметр-указатель внутри сигнатуры метода.Этот класс не наследуется.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsImplicitlyDereferenced">
+      <summary>Указывает, что измененная ссылка на сборку мусора представляет ссылочный параметр с сигнатурой метода.Этот класс не наследуется.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsJitIntrinsic">
+      <summary>Указывает, что измененный метод является внутренним значением, для которого JIT-компилятор может генерировать особый код.Этот класс не наследуется.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsLong">
+      <summary>Указывает, что измененное целое число является стандартным значением long из C++.Этот класс не наследуется.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsSignUnspecifiedByte">
+      <summary>Указывает, что наличие знака для модификатора не указано.Этот класс не наследуется.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsUdtReturn">
+      <summary>Указывает, что возвращаемый тип является пользовательским.Этот класс не наследуется.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.NativeCppClassAttribute">
+      <summary>Применяет к сборке метаданные, указывающие, что тип является неуправляемым.  Этот класс не наследуется.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.NativeCppClassAttribute.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:System.Runtime.CompilerServices.NativeCppClassAttribute" />. </summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.RequiredAttributeAttribute">
+      <summary>Указывает, что импортирующий компилятор должен полностью понимать семантику определения типа либо отказаться от его использования.  Этот класс не наследуется. </summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.RequiredAttributeAttribute.#ctor(System.Type)">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:System.Runtime.CompilerServices.RequiredAttributeAttribute" />.</summary>
+      <param name="requiredContract">Тип, который должен быть полностью понятен импортирующему компилятору.Этот параметр не поддерживается в версии .NET Framework 2.0 и более поздних. </param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.RequiredAttributeAttribute.RequiredContract">
+      <summary>Возвращает тип, который должен быть полностью понятен импортирующему компилятору.</summary>
+      <returns>Тип, который должен быть полностью понятен импортирующему компилятору. </returns>
+    </member>
+  </members>
+</doc>

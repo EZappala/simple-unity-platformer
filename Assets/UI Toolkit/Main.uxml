@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/level.uss?fileID=7433441132597879392&amp;guid=536e154415b696e4f9e0aac719ca2f5b&amp;type=3#level" />
+    <ui:VisualElement name="MenuPanel" style="flex-grow: 1;">
+        <ui:Label text="Fallen Realm" name="Title" style="-unity-text-align: upper-center; font-size: 144px; -unity-font-definition: url(&quot;project://database/Assets/UI%20Toolkit/alagard.ttf?fileID=12800000&amp;guid=b35f8b0812b500346a1d273506801866&amp;type=3#alagard&quot;); -unity-background-scale-mode: stretch-to-fill; border-top-width: 0; margin-top: 10%; color: rgb(184, 194, 185);" />
+        <ui:Button text="Begin" double-click-selects-word="false" triple-click-selects-line="false" display-tooltip-when-elided="false" name="PlayButton" class="game-text" style="background-image: none; background-color: rgb(184, 194, 185); width: 10%; height: 6%; align-self: center; margin-top: 5%; border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px;" />
+    </ui:VisualElement>
+    <ui:Label text="Created by Éloïse Zappala&#10;(eloise.zappala@pace.edu)" name="Footer" class="game-text" style="color: rgb(184, 194, 185);" />
+</ui:UXML>

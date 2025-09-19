@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" editor-extension-mode="False" schemaLocation="UnityEngine.UIElements ">
+    <Style src="project://database/Assets/UI%20Toolkit/level.uss?fileID=7433441132597879392&amp;guid=536e154415b696e4f9e0aac719ca2f5b&amp;type=3#level" />
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; position: absolute; height: 79px; width: 348px; top: 541px; left: 1238px;">
+        <ui:TextElement name="L0Text" text="I am but old and weary, Child. Woulds&apos;t thou&#10;to me bring stones, so from this plane we may&#10;depart and ne&apos;er return forevermore?" class="game-text dialogue-text" style="height: 100%; width: 100%; text-overflow: clip; color: rgb(184, 194, 184); -unity-font-definition: url(&quot;project://database/Assets/UI%20Toolkit/alagard.ttf?fileID=12800000&amp;guid=b35f8b0812b500346a1d273506801866&amp;type=3#alagard&quot;); font-size: 16px; opacity: 1;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Runtime.CompilerServices.VisualC</name>
+  </assembly>
+  <members>
+    <member name="T:System.Runtime.CompilerServices.CallConvCdecl">
+      <summary>メソッドが Cdecl 呼び出し規約を使用する必要があることを示します。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvFastcall">
+      <summary>この呼び出し規約は、このバージョンの .NET Framework ではサポートされていません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvStdcall">
+      <summary>メソッドが StdCall 呼び出し規約を使用する必要があることを示します。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvThiscall">
+      <summary>メソッドが ThisCall 呼び出し規約を使用する必要があることを示します。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsBoxed">
+      <summary>修飾されている参照型がボックス化された値型であることを示します。このクラスは継承できません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsByValue">
+      <summary>修飾されているメソッドの引数が、値渡しのオブジェクトのセマンティクスを持つものとして解釈される必要があることを示します。この修飾子は参照型に適用されます。このクラスは継承できません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsCopyConstructed">
+      <summary>この型の値のコピーには、型が提供するコピー コンストラクターを使用する必要があることを示します。このクラスは継承できません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsExplicitlyDereferenced">
+      <summary>マネージ ポインターがメソッド シグネチャ内のポインター パラメーターを表すことを示します。このクラスは継承できません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsImplicitlyDereferenced">
+      <summary>修飾されるガベージ コレクション参照がメソッド シグネチャ内の参照パラメーターを表すことを示します。このクラスは継承できません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsJitIntrinsic">
+      <summary>修飾されているメソッドは Just-In-Time (JIT) コンパイラが特殊なコード生成を実行できる組み込み値であることを示します。このクラスは継承できません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsLong">
+      <summary>修飾される整数が標準の C++ long 値であることを示します。このクラスは継承できません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsSignUnspecifiedByte">
+      <summary>修飾子が符号付きでも、符号なしでもないことを示します。このクラスは継承できません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsUdtReturn">
+      <summary>戻り値の型がユーザー定義型であることを示します。このクラスは継承できません。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.NativeCppClassAttribute">
+      <summary>型がアンマネージ型であることを示すアセンブリにメタデータを適用します。このクラスは継承できません。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.NativeCppClassAttribute.#ctor">
+      <summary>
+        <see cref="T:System.Runtime.CompilerServices.NativeCppClassAttribute" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.RequiredAttributeAttribute">
+      <summary>インポート元のコンパイラが、型定義のセマンティクスを十分に理解している必要があるか、またはその使用を拒否する必要があることを示します。このクラスは継承できません。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.RequiredAttributeAttribute.#ctor(System.Type)">
+      <summary>
+        <see cref="T:System.Runtime.CompilerServices.RequiredAttributeAttribute" /> クラスの新しいインスタンスを初期化します。</summary>
+      <param name="requiredContract">インポート元のコンパイラが十分に理解する必要のある型。このパラメーターは、.NET Framework Version 2.0 以降ではサポートされていません。</param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.RequiredAttributeAttribute.RequiredContract">
+      <summary>インポート元のコンパイラが十分に理解する必要のある型を取得します。</summary>
+      <returns>インポート元のコンパイラが十分に理解する必要のある型。</returns>
+    </member>
+  </members>
+</doc>

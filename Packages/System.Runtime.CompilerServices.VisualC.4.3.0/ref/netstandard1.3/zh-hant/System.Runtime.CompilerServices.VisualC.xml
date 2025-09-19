@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Runtime.CompilerServices.VisualC</name>
+  </assembly>
+  <members>
+    <member name="T:System.Runtime.CompilerServices.CallConvCdecl">
+      <summary>表示方法應該使用 Cdecl 呼叫慣例。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvFastcall">
+      <summary>這個呼叫慣例在這個 .NET Framework 版本中不支援。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvStdcall">
+      <summary>表示方法應該使用 StdCall 呼叫慣例。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvThiscall">
+      <summary>表示方法應該使用 ThisCall 呼叫慣例。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsBoxed">
+      <summary>表示修改的參考型別為 boxed 實值型別。此類別無法被繼承。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsByValue">
+      <summary>表示修改的方法引數應該解譯成含有以傳值 (By Value) 方式傳遞物件的語意 (Semantics)。這個修飾詞會套用至參考型別。此類別無法被繼承。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsCopyConstructed">
+      <summary>表示複製這個型別的值時，必須使用此型別所提供的複製建構函式。此類別無法被繼承。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsExplicitlyDereferenced">
+      <summary>表示 Managed 指標會表示方法簽章內的指標參數。此類別無法被繼承。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsImplicitlyDereferenced">
+      <summary>表示修改的記憶體回收參考會表示方法簽章內的參考參數。此類別無法被繼承。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsJitIntrinsic">
+      <summary>表示修改的方法是 Just-In-Time (JIT) 編譯器可執行特殊程式碼產生作業的內建值。此類別無法被繼承。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsLong">
+      <summary>表示修改的整數是標準 C++ long 值。此類別無法被繼承。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsSignUnspecifiedByte">
+      <summary>表示某個修飾詞既非 signed 也不是 unsigned。此類別無法被繼承。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsUdtReturn">
+      <summary>表示傳回型別為使用者定義型別。此類別無法被繼承。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.NativeCppClassAttribute">
+      <summary>將中繼資料 (Metadata) 套用至組件，表示某個型別為 Unmanaged 型別。此類別無法被繼承。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.NativeCppClassAttribute.#ctor">
+      <summary>初始化 <see cref="T:System.Runtime.CompilerServices.NativeCppClassAttribute" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.RequiredAttributeAttribute">
+      <summary>指定匯入的編譯器 (Compiler) 必須完整了解型別定義的語意，或拒絕使用它。此類別無法被繼承。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.RequiredAttributeAttribute.#ctor(System.Type)">
+      <summary>初始化 <see cref="T:System.Runtime.CompilerServices.RequiredAttributeAttribute" /> 類別的新執行個體。</summary>
+      <param name="requiredContract">進行匯入的編譯器 (Compiler) 必須完全了解的型別。.NET Framework 2.0 版 (含) 以後版本不支援這個參數。</param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.RequiredAttributeAttribute.RequiredContract">
+      <summary>取得進行匯入的編譯器 (Compiler) 必須完全了解的型別。</summary>
+      <returns>進行匯入的編譯器 (Compiler) 必須完全了解的型別。</returns>
+    </member>
+  </members>
+</doc>

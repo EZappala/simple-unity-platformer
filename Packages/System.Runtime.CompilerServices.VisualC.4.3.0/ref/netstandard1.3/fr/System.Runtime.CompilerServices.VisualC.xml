@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Runtime.CompilerServices.VisualC</name>
+  </assembly>
+  <members>
+    <member name="T:System.Runtime.CompilerServices.CallConvCdecl">
+      <summary>Indique qu'une méthode doit utiliser la convention d'appel Cdecl.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvFastcall">
+      <summary>Cette convention d'appel n'est pas prise en charge dans cette version du .NET Framework.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvStdcall">
+      <summary>Indique qu'une méthode doit utiliser la convention d'appel StdCall.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallConvThiscall">
+      <summary>Indique qu'une méthode doit utiliser la convention d'appel ThisCall.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsBoxed">
+      <summary>Indique que le type référence modifié est un type valeur boxed.Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsByValue">
+      <summary>Indique qu'un argument de méthode modifié doit être interprété comme ayant une sémantique d'objet « passé par valeur ».Ce modificateur est appliqué aux types référence.  Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsCopyConstructed">
+      <summary>Indique que toute copie de valeurs de ce type doit utiliser le constructeur de copie fourni par le type.  Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsExplicitlyDereferenced">
+      <summary>Indique qu'un pointeur managé représente un paramètre pointeur dans une signature de méthode.Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsImplicitlyDereferenced">
+      <summary>Indique que la référence de garbage collection modifiée représente un paramètre de référence dans une signature de méthode.Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsJitIntrinsic">
+      <summary>Indique qu'une méthode modifiée est une valeur intrinsèque pour laquelle le compilateur juste-à-temps (JIT) peut exécuter une génération de code spéciale.Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsLong">
+      <summary>Indique qu'un entier modifié est une valeur long C++ standard.Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsSignUnspecifiedByte">
+      <summary>Indique qu'un modificateur n'est ni signé, ni non signé.Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.IsUdtReturn">
+      <summary>Indique qu'un type de retour est un type défini par l'utilisateur.Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.NativeCppClassAttribute">
+      <summary>Applique des métadonnées à un assembly qui indiquent qu'un type est non managé.  Cette classe ne peut pas être héritée.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.NativeCppClassAttribute.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Runtime.CompilerServices.NativeCppClassAttribute" />. </summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.RequiredAttributeAttribute">
+      <summary>Spécifie qu'un compilateur qui importe doit comprendre parfaitement la sémantique d'une définition de type, ou refuser de l'utiliser.  Cette classe ne peut pas être héritée. </summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.RequiredAttributeAttribute.#ctor(System.Type)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Runtime.CompilerServices.RequiredAttributeAttribute" />.</summary>
+      <param name="requiredContract">Type qu'un compilateur d'importation doit comprendre parfaitement.Ce paramètre n'est pas pris en charge dans la version 2.0 et ultérieure du .NET Framework. </param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.RequiredAttributeAttribute.RequiredContract">
+      <summary>Obtient un type qu'un compilateur d'importation doit comprendre parfaitement.</summary>
+      <returns>Type qu'un compilateur d'importation doit comprendre parfaitement. </returns>
+    </member>
+  </members>
+</doc>
